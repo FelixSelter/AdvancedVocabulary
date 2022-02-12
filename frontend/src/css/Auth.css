@@ -1,0 +1,12 @@
+.auth-container {
+  background-color: hsl(137, 48%, 52%);
+}
+
+.auth {
+  padding: 20px;
+  -webkit-border-radius: 10px 10px 10px 10px;
+  border-radius: 10px 10px 10px 10px;
+  background: #fff;
+  -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+}
