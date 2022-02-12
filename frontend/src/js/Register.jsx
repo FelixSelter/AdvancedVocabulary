@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 /**
  * The login form
  * @return {JSX.Element} login form
  */
 export default function Login() {
+  /**
+   * @type {function} translates the given key
+   */
+  const { t } = useTranslation();
+
   /**
    * If the user filled out the form correctly
    * and the request can be send to the server
@@ -38,47 +44,43 @@ export default function Login() {
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
       <div className="mb-3">
-        <Form.Label>Email address</Form.Label>
+        <Form.Label> {t('email_address')}</Form.Label>
         <Form.Control
           required
           type="email"
-          placeholder="Email address"
+          placeholder={t('email_address')}
           size="lg"
         />
-        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-        <Form.Control.Feedback type="invalid">
-          <p>
-            Please specify an actual email address.
-            <br />
-            We will send you a confirmation email
-          </p>
+        <Form.Control.Feedback type="valid">
+          {t('positive_feedback')}
         </Form.Control.Feedback>
-        <Form.Text className="text-muted">
-          We will never share your email with anyone else
-        </Form.Text>
+        <Form.Control.Feedback type="invalid">
+          <p>{t('email_specify')}</p>
+        </Form.Control.Feedback>
+        <Form.Text className="text-muted">{t('email_disclaimer')}</Form.Text>
       </div>
 
       <div className="mb-3">
-        <Form.Label>Password</Form.Label>
+        <Form.Label> {t('password')}</Form.Label>
         <Form.Control
           required
           type="password"
-          placeholder="Password"
+          placeholder=" {t('password')}"
           size="lg"
           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
           onChange={ensurePasswordsMatch}
         />
-        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+        <Form.Control.Feedback type="valid">
+          {' '}
+          {t('positive_feedback')}
+        </Form.Control.Feedback>
         <Form.Control.Feedback type="invalid">
-          <p>
-            Your password needs to contain at least 8 characters, a number,
-            <br /> a special character, an upper and a lower case letter.
-          </p>
+          <p>{t('password_requirements')}</p>
         </Form.Control.Feedback>
       </div>
 
       <div className="mb-4">
-        <Form.Label>Repeat your password</Form.Label>
+        <Form.Label> {t('password_repeat')}</Form.Label>
         <Form.Control
           required
           type="password"
@@ -86,15 +88,18 @@ export default function Login() {
           size="lg"
           id="repeatPassword"
         />
-        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+        <Form.Control.Feedback type="valid">
+          {' '}
+          {t('positive_feedback')}
+        </Form.Control.Feedback>
         <Form.Control.Feedback type="invalid">
-          <p>Your passwords needs to match.</p>
+          <p> {t('password_match')}</p>
         </Form.Control.Feedback>
       </div>
 
       <div className="mb-1 d-flex justify-content-around">
         <Button type="submit" variant="primary">
-          Create a new account
+          {t('account_create')}
         </Button>
       </div>
     </Form>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Tabs, Tab } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 import Login from './Login';
 import Register from './Register';
@@ -11,6 +12,11 @@ import '../css/Auth.css';
  * @return {JSX.Element} Auth Component
  */
 export default function Auth() {
+  /**
+   * @type {function} translates the given key
+   */
+  const { t } = useTranslation();
+
   /**
    * The currently active tab
    * Needed so it can be passed down to login so it can hide the guest popover
@@ -33,11 +39,11 @@ export default function Auth() {
           activeKey={tab}
           onSelect={(tab) => setTab(tab)}
         >
-          <Tab eventKey="login" title="Login">
+          <Tab eventKey="login" title={t('login')}>
             <Login tab={tab} />
           </Tab>
 
-          <Tab eventKey="register" title="Register">
+          <Tab eventKey="register" title={t('register')}>
             <Register />
           </Tab>
         </Tabs>

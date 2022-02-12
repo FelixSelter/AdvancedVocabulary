@@ -1,30 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { Form, Button, Popover, OverlayTrigger } from 'react-bootstrap';
-
-/**
- * The popover that shows information about the guest login
- * @type {JSX.Element}
- */
-const popover = (
-  <Popover id="popover-basic">
-    <Popover.Body className="d-flex flex-column">
-      <p>
-        You can try our website as a Guest. However your Account will be deleted
-        after 48 hours. You can migrate your Guest Account to an actual one at
-        any time!
-      </p>
-      <div className="d-flex justify-content-around">
-        <Button variant="primary" className="text-center" size="sm">
-          Create a Guest Account
-        </Button>
-        <Button variant="danger" className="text-center" size="sm">
-          Close
-        </Button>
-      </div>
-    </Popover.Body>
-  </Popover>
-);
 
 /**
  * The login form
@@ -33,6 +10,11 @@ const popover = (
  * @return {JSX.Element} login form
  */
 export default function Login(props) {
+  /**
+   * @type {function} translates the given key
+   */
+  const { t } = useTranslation();
+
   /**
    * If the guest info is active or not
    * @type {Boolean}
@@ -45,6 +27,26 @@ export default function Login(props) {
    * @type {Boolean}
    */
   const [validated, setValidated] = useState(false);
+
+  /**
+   * The popover that shows information about the guest login
+   * @type {JSX.Element}
+   */
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Body className="d-flex flex-column">
+        <p>{t('guest_info')}</p>
+        <div className="d-flex justify-content-around">
+          <Button variant="primary" className="text-center" size="sm">
+            {t('guest_create')}
+          </Button>
+          <Button variant="danger" className="text-center" size="sm">
+            {t('guest_close')}
+          </Button>
+        </div>
+      </Popover.Body>
+    </Popover>
+  );
 
   /**
    * Validates the form so custom visual feedback can be applied
@@ -69,37 +71,35 @@ export default function Login(props) {
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
       <div className="mb-3">
-        <Form.Label>Email address</Form.Label>
+        <Form.Label>{t('email_address')}</Form.Label>
         <Form.Control
           required
           type="email"
-          placeholder="Email address"
+          placeholder={t('email_address')}
           size="lg"
         />
-        <Form.Text className="text-muted">
-          We will never share your email with anyone else
-        </Form.Text>
+        <Form.Text className="text-muted">{t('email_disclaimer')}</Form.Text>
       </div>
 
       <div className="mb-1">
-        <Form.Label>Password</Form.Label>
+        <Form.Label>{t('password')}</Form.Label>
         <Form.Control
           required
           type="password"
-          placeholder="Password"
+          placeholder={t('password')}
           size="lg"
         />
       </div>
 
       <div className="mb-4">
         <a className="underlineHover" href="#">
-          Forgot Password?
+          {t('forgot_password')}
         </a>
       </div>
 
       <div className="mb-1 d-flex justify-content-around">
         <Button type="submit" variant="primary">
-          Log in
+          {t('login')}
         </Button>
 
         <OverlayTrigger
@@ -111,7 +111,7 @@ export default function Login(props) {
             variant="secondary"
             onClick={() => setShowGuestInfo(!showGuestInfo)}
           >
-            Log in as Guest
+            {t('guest_login')}
           </Button>
         </OverlayTrigger>
       </div>

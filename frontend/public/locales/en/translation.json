@@ -1,0 +1,18 @@
+{
+  "login": "Login",
+  "register": "Register",
+  "guest_info": "You can try our website as a Guest. However your Account will be deleted after 48 hours. You can migrate your Guest Account to an actual one at any time!",
+  "guest_create": "Create a Guest Account",
+  "guest_close": "Close",
+  "email_disclaimer": "We will never share your email with anyone else",
+  "email_address": "Email address",
+  "password": "Password",
+  "forgot_password": "Forgot Password?",
+  "guest_login": "Log in as a Guest",
+  "positive_feedback": "Looks good!",
+  "email_specify": "Please specify an actual email address.\nWe will send you a confirmation email",
+  "password_requirements": "Your password needs to contain at least 8 characters, a number,\n a special character, an upper and a lower case letter.",
+  "password_repeat": "Repear your password",
+  "password_match": "Your passwords need to match",
+  "account_create": "Create a new Account"
+}
