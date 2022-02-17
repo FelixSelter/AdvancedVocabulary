@@ -14,6 +14,8 @@
   "plugins": ["react"],
   "rules": {
     "object-curly-spacing": "off",
-    "max-len": "warn"
+    "max-len": "warn",
+    "indent": "warn",
+    "comma-dangle": "warn"
   }
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
@@ -20,29 +21,44 @@ export default function Login() {
   const [validated, setValidated] = useState(false);
 
   /**
+   * The email address inside the form
+   * @type {String}
+   */
+  const [email, setEmail] = useState('');
+
+  /**
+   * The password inside the form
+   * @type {String}
+   */
+  const [password, setPassword] = useState('');
+
+  /**
    * Validates the form so custom visual feedback can be applied
    * @param {MouseEvent} event ClickEvent
    */
-  function handleSubmit(event) {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
+  async function handleSubmit(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (event.currentTarget.checkValidity()) {
+      const res = await axios.post(
+        process.env.REACT_APP_BACKEND + 'register',
+        { email, password },
+        {
+          headers: {
+            'content-type': 'application/json',
+          },
+        }
+      );
+      console.log(res);
     }
 
     // display the highlights
     setValidated(true);
   }
 
-  /**
-   * @param {Event} event ChangeEvent
-   */
-  function ensurePasswordsMatch(event) {
-    document.getElementById('repeatPassword').pattern = event.target.value;
-  }
-
   return (
-    <Form noValidate validated={validated} onSubmit={handleSubmit}>
+    <Form noValidate validated={validated} onSubmit={handleSubmit} action="">
       <div className="mb-3">
         <Form.Label> {t('email_address')}</Form.Label>
         <Form.Control
@@ -50,6 +66,7 @@ export default function Login() {
           type="email"
           placeholder={t('email_address')}
           size="lg"
+          onChange={(event) => setEmail(event.target.value)}
         />
         <Form.Control.Feedback type="valid">
           {t('positive_feedback')}
@@ -65,10 +82,14 @@ export default function Login() {
         <Form.Control
           required
           type="password"
-          placeholder=" {t('password')}"
+          placeholder={t('password')}
           size="lg"
           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-          onChange={ensurePasswordsMatch}
+          onChange={(event) => {
+            document.getElementById('repeatPassword').pattern =
+              event.target.value;
+            setPassword(event.target.value);
+          }}
         />
         <Form.Control.Feedback type="valid">
           {' '}
@@ -89,7 +110,6 @@ export default function Login() {
           id="repeatPassword"
         />
         <Form.Control.Feedback type="valid">
-          {' '}
           {t('positive_feedback')}
         </Form.Control.Feedback>
         <Form.Control.Feedback type="invalid">

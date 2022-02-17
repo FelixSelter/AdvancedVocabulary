@@ -6,11 +6,20 @@ import Account from '../models/AccountModel.js';
  * @param {String} res
  */
 function register(req, res) {
-  // TODO: validate the password
+  // email validation
   if (!isEmailValid(req.body.email)) {
     res.status(400).json({
       success: false,
       error: 'EmailInvalidError',
+    });
+    return;
+  }
+
+  // password validation
+  if (!isPasswordValid(req.body.password)) {
+    res.status(400).json({
+      success: false,
+      error: 'PasswordInvalidError',
     });
     return;
   }
@@ -35,7 +44,7 @@ function register(req, res) {
 
 /**
  * Checks if the provided string is an actual email address
- * @param {String} email The email adress
+ * @param {String} email
  * @return {Boolean} email validity
  */
 function isEmailValid(email) {
@@ -44,4 +53,19 @@ function isEmailValid(email) {
   );
 }
 
-export { register, isEmailValid };
+/**
+ * Checks if the provided string matches the requirements of a strong password
+ * 8 characters min length
+ * Uppercase and lowercase letters
+ * Numbers
+ * Special characters
+ * @param {String} password
+ * @return {Boolean} password validity#
+ */
+function isPasswordValid(password) {
+  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+    password
+  );
+}
+
+export { register, isEmailValid, isPasswordValid };

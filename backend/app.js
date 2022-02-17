@@ -4,6 +4,7 @@ dotenv.config(); // load environment variables
 import express from 'express';
 import passport from 'passport';
 import session from 'express-session';
+import cors from 'cors';
 
 // local imports
 import AccountModel from './models/AccountModel.js';
@@ -33,6 +34,15 @@ app.use(passport.session());
 passport.serializeUser(AccountModel.serializeUser());
 passport.deserializeUser(AccountModel.deserializeUser());
 passport.use(AccountModel.createStrategy());
+
+// cors
+const CORS_WHITELIST = JSON.parse(process.env.CORS_WHITELIST);
+app.use(
+  cors({
+    origin: (origin, callback) =>
+      callback(null, CORS_WHITELIST.includes(origin)),
+  })
+);
 
 app.use('/api/', AccountRouter);
 
