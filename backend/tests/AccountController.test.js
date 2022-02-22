@@ -2,63 +2,6 @@ import mongoose from 'mongoose';
 import request from 'supertest';
 import app from '../app.js';
 import AccountModel from '../models/AccountModel.js';
-import {
-  register,
-  isEmailValid,
-  isPasswordValid,
-} from '../controller/AccountController.js';
-
-describe('[U] Testing the email validation', () => {
-  it('Should accept a valid email address', () => {
-    expect(isEmailValid('email@test.com')).toBe(true);
-  });
-
-  it('Should not accept an empty string', () => {
-    expect(isEmailValid('')).toBe(false);
-  });
-
-  it('Should not accept an email address without a @ sign', () => {
-    expect(isEmailValid('emailtest.com')).toBe(false);
-  });
-
-  it('Should not accept an email address without an identifier', () => {
-    expect(isEmailValid('@test.com')).toBe(false);
-  });
-
-  it('Should not accept an email address without a top level domain', () => {
-    expect(isEmailValid('email@test')).toBe(false);
-  });
-
-  it('Should not accept an email address without a domain', () => {
-    expect(isEmailValid('email@.com')).toBe(false);
-  });
-});
-
-describe('[U] Testing the password validation', () => {
-  it('Should accept a valid password', () => {
-    expect(isPasswordValid('Password1!')).toBe(true);
-  });
-
-  it('Should not accept a password with less than 8 characters', () => {
-    expect(isPasswordValid('Pasrd1!')).toBe(false);
-  });
-
-  it('Should not accept a password without numbers', () => {
-    expect(isPasswordValid('Password!')).toBe(false);
-  });
-
-  it('Should not accept a password without special characters', () => {
-    expect(isPasswordValid('Password1')).toBe(false);
-  });
-
-  it('Should not accept a password without uppercase letters', () => {
-    expect(isPasswordValid('password1!')).toBe(false);
-  });
-
-  it('Should not accept a password without lowercase letters', () => {
-    expect(isPasswordValid('PASSWORD1!')).toBe(false);
-  });
-});
 
 describe('[E2E] Testing the registration route', () => {
   beforeAll(async () => {
@@ -95,8 +38,15 @@ describe('[E2E] Testing the registration route', () => {
     expect(res.statusCode).toBe(400);
     expect(res.body.success).toBeDefined();
     expect(res.body.success).toBe(false);
-    expect(res.body.error).toBeDefined();
-    expect(res.body.error).toBe('EmailInvalidError');
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors).toStrictEqual([
+      {
+        value: 'emailtest.com',
+        msg: 'Please provide a valid email address',
+        param: 'email',
+        location: 'body',
+      },
+    ]);
   });
 
   it('Should not accept an email address without an identifier', async () => {
@@ -106,8 +56,15 @@ describe('[E2E] Testing the registration route', () => {
     expect(res.statusCode).toBe(400);
     expect(res.body.success).toBeDefined();
     expect(res.body.success).toBe(false);
-    expect(res.body.error).toBeDefined();
-    expect(res.body.error).toBe('EmailInvalidError');
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors).toStrictEqual([
+      {
+        value: '@test.com',
+        msg: 'Please provide a valid email address',
+        param: 'email',
+        location: 'body',
+      },
+    ]);
   });
 
   it('Should not accept an email address without a domain', async () => {
@@ -117,8 +74,15 @@ describe('[E2E] Testing the registration route', () => {
     expect(res.statusCode).toBe(400);
     expect(res.body.success).toBeDefined();
     expect(res.body.success).toBe(false);
-    expect(res.body.error).toBeDefined();
-    expect(res.body.error).toBe('EmailInvalidError');
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors).toStrictEqual([
+      {
+        value: 'email@.com',
+        msg: 'Please provide a valid email address',
+        param: 'email',
+        location: 'body',
+      },
+    ]);
   });
 
   it('Should not accept an email address without a top level domain', async () => {
@@ -128,8 +92,15 @@ describe('[E2E] Testing the registration route', () => {
     expect(res.statusCode).toBe(400);
     expect(res.body.success).toBeDefined();
     expect(res.body.success).toBe(false);
-    expect(res.body.error).toBeDefined();
-    expect(res.body.error).toBe('EmailInvalidError');
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors).toStrictEqual([
+      {
+        value: 'email@test',
+        msg: 'Please provide a valid email address',
+        param: 'email',
+        location: 'body',
+      },
+    ]);
   });
 
   it('Should not accept an empty string as email address', async () => {
@@ -139,8 +110,15 @@ describe('[E2E] Testing the registration route', () => {
     expect(res.statusCode).toBe(400);
     expect(res.body.success).toBeDefined();
     expect(res.body.success).toBe(false);
-    expect(res.body.error).toBeDefined();
-    expect(res.body.error).toBe('EmailInvalidError');
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors).toStrictEqual([
+      {
+        value: '',
+        msg: 'Please provide a valid email address',
+        param: 'email',
+        location: 'body',
+      },
+    ]);
   });
 
   it('Should not accept a password with less than 8 characters', async () => {
@@ -150,8 +128,15 @@ describe('[E2E] Testing the registration route', () => {
     expect(res.statusCode).toBe(400);
     expect(res.body.success).toBeDefined();
     expect(res.body.success).toBe(false);
-    expect(res.body.error).toBeDefined();
-    expect(res.body.error).toBe('PasswordInvalidError');
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors).toStrictEqual([
+      {
+        value: 'Passw1!',
+        msg: 'The password must be at least 8 characters long, contain upper and lowercase letters as well as numbers and symbols',
+        param: 'password',
+        location: 'body',
+      },
+    ]);
   });
 
   it('Should not accept a password without special characters', async () => {
@@ -161,8 +146,15 @@ describe('[E2E] Testing the registration route', () => {
     expect(res.statusCode).toBe(400);
     expect(res.body.success).toBeDefined();
     expect(res.body.success).toBe(false);
-    expect(res.body.error).toBeDefined();
-    expect(res.body.error).toBe('PasswordInvalidError');
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors).toStrictEqual([
+      {
+        value: 'Password1',
+        msg: 'The password must be at least 8 characters long, contain upper and lowercase letters as well as numbers and symbols',
+        param: 'password',
+        location: 'body',
+      },
+    ]);
   });
 
   it('Should not accept a password without numbers', async () => {
@@ -172,8 +164,15 @@ describe('[E2E] Testing the registration route', () => {
     expect(res.statusCode).toBe(400);
     expect(res.body.success).toBeDefined();
     expect(res.body.success).toBe(false);
-    expect(res.body.error).toBeDefined();
-    expect(res.body.error).toBe('PasswordInvalidError');
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors).toStrictEqual([
+      {
+        value: 'Password!',
+        msg: 'The password must be at least 8 characters long, contain upper and lowercase letters as well as numbers and symbols',
+        param: 'password',
+        location: 'body',
+      },
+    ]);
   });
 
   it('Should not accept a password without uppercase letters', async () => {
@@ -183,8 +182,15 @@ describe('[E2E] Testing the registration route', () => {
     expect(res.statusCode).toBe(400);
     expect(res.body.success).toBeDefined();
     expect(res.body.success).toBe(false);
-    expect(res.body.error).toBeDefined();
-    expect(res.body.error).toBe('PasswordInvalidError');
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors).toStrictEqual([
+      {
+        value: 'password1!',
+        msg: 'The password must be at least 8 characters long, contain upper and lowercase letters as well as numbers and symbols',
+        param: 'password',
+        location: 'body',
+      },
+    ]);
   });
 
   it('Should not accept a password without lowercase letters', async () => {
@@ -194,8 +200,15 @@ describe('[E2E] Testing the registration route', () => {
     expect(res.statusCode).toBe(400);
     expect(res.body.success).toBeDefined();
     expect(res.body.success).toBe(false);
-    expect(res.body.error).toBeDefined();
-    expect(res.body.error).toBe('PasswordInvalidError');
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors).toStrictEqual([
+      {
+        value: 'PASSWORD1!',
+        msg: 'The password must be at least 8 characters long, contain upper and lowercase letters as well as numbers and symbols',
+        param: 'password',
+        location: 'body',
+      },
+    ]);
   });
 
   it('Should accept a valid password', async () => {
