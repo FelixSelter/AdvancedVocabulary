@@ -15,7 +15,7 @@
   "rules": {
     "object-curly-spacing": "off",
     "max-len": "warn",
-    "indent": "warn",
-    "comma-dangle": "warn"
+    "indent": "off",
+    "comma-dangle": "off"
   }
 }

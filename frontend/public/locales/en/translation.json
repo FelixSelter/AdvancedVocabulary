@@ -14,5 +14,6 @@
   "password_requirements": "Your password needs to contain at least 8 characters, a number,\n a special character, an upper and a lower case letter.",
   "password_repeat": "Repear your password",
   "password_match": "Your passwords need to match",
-  "account_create": "Create a new Account"
+  "account_create": "Create a new Account",
+  "email_taken": "Theres already an account registered with this email address"
 }

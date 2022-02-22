@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * The login form
@@ -12,6 +13,11 @@ export default function Login() {
    * @type {function} translates the given key
    */
   const { t } = useTranslation();
+
+  /**
+   * @type {function} Used to navigate to / after Register is complete
+   */
+  const redirect = useNavigate();
 
   /**
    * If the user filled out the form correctly
@@ -27,6 +33,12 @@ export default function Login() {
   const [email, setEmail] = useState('');
 
   /**
+   * The email address inside the form
+   * @type {String}
+   */
+  const [usernameComment, setUsernameComment] = useState(null);
+
+  /**
    * The password inside the form
    * @type {String}
    */
@@ -35,22 +47,30 @@ export default function Login() {
   /**
    * Validates the form so custom visual feedback can be applied
    * @param {MouseEvent} event ClickEvent
+   * @param {Object} redirect The useNavigate() object from the react router lib
    */
-  async function handleSubmit(event) {
+  async function handleSubmit(event, redirect) {
     event.preventDefault();
     event.stopPropagation();
 
     if (event.currentTarget.checkValidity()) {
-      const res = await axios.post(
-        process.env.REACT_APP_BACKEND + 'register',
-        { email, password },
-        {
-          headers: {
-            'content-type': 'application/json',
-          },
-        }
-      );
-      console.log(res);
+      try {
+        await axios.post(
+          process.env.REACT_APP_BACKEND + 'register',
+          { email, password },
+          {
+            headers: {
+              'content-type': 'application/json',
+            },
+          }
+        );
+
+        redirect('/');
+      } catch (error) {
+        // The only error can be username taken
+        // password and email validity is checked by the form so they are correct for sure
+        setUsernameComment(t('email_taken'));
+      }
     }
 
     // display the highlights
@@ -58,7 +78,14 @@ export default function Login() {
   }
 
   return (
-    <Form noValidate validated={validated} onSubmit={handleSubmit} action="">
+    <Form
+      noValidate
+      validated={validated}
+      onSubmit={(event) => {
+        handleSubmit(event, redirect);
+      }}
+      action=""
+    >
       <div className="mb-3">
         <Form.Label> {t('email_address')}</Form.Label>
         <Form.Control
@@ -68,6 +95,7 @@ export default function Login() {
           size="lg"
           onChange={(event) => setEmail(event.target.value)}
         />
+
         <Form.Control.Feedback type="valid">
           {t('positive_feedback')}
         </Form.Control.Feedback>
@@ -75,6 +103,9 @@ export default function Login() {
           <p>{t('email_specify')}</p>
         </Form.Control.Feedback>
         <Form.Text className="text-muted">{t('email_disclaimer')}</Form.Text>
+        {usernameComment !== null && (
+          <Alert variant="danger">{usernameComment}</Alert>
+        )}
       </div>
 
       <div className="mb-3">
