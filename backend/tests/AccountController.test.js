@@ -27,8 +27,15 @@ describe('[E2E] Testing the registration route', () => {
     expect(res.statusCode).toBe(422);
     expect(res.body.success).toBeDefined();
     expect(res.body.success).toBe(false);
-    expect(res.body.error).toBeDefined();
-    expect(res.body.error).toBe('UserExistsError');
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors).toStrictEqual([
+      {
+        value: 'email@test.com',
+        msg: 'Username taken',
+        param: 'email',
+        location: 'body',
+      },
+    ]);
   });
 
   it('Should not accept an email address without a @ sign', async () => {

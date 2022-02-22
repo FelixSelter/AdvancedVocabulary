@@ -21,7 +21,14 @@ function register(req, res) {
     if (err) {
       res.status(422).json({
         success: false,
-        error: err.name,
+        errors: [
+          {
+            value: req.body.email,
+            msg: 'Username taken',
+            param: 'email',
+            location: 'body',
+          },
+        ],
       });
     } else {
       res.status(201).json({
