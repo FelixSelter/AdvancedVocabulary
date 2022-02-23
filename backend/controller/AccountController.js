@@ -12,6 +12,7 @@ function register(req, res) {
   });
 
   Account.register(user, req.body.password, function (err, user) {
+    console.log(err);
     if (err) {
       res.status(422).json({
         errors: [
@@ -24,9 +25,8 @@ function register(req, res) {
         ],
       });
     } else {
-      passport.authenticate('local')(req, res, () => {
-        res.sendStatus(201);
-      });
+      req.login(user, (err) => {});
+      res.sendStatus(201);
     }
   });
 }
