@@ -1,4 +1,5 @@
 import Account from '../models/AccountModel.js';
+import passport from 'passport';
 
 /**
  * A function to register an account
@@ -13,7 +14,6 @@ function register(req, res) {
   Account.register(user, req.body.password, function (err, user) {
     if (err) {
       res.status(422).json({
-        success: false,
         errors: [
           {
             value: req.body.email,
@@ -24,8 +24,8 @@ function register(req, res) {
         ],
       });
     } else {
-      res.status(201).json({
-        success: true,
+      passport.authenticate('local')(req, res, () => {
+        res.sendStatus(201);
       });
     }
   });

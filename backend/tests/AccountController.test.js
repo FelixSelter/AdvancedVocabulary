@@ -13,8 +13,6 @@ describe('[E2E] Testing the registration route', () => {
       .post('/api/register')
       .send({ email: 'email@test.com', password: 'Password1!' });
     expect(res.statusCode).toBe(201);
-    expect(res.body.success).toBeDefined();
-    expect(res.body.success).toBe(true);
     expect(await AccountModel.findOne({ email: 'email@test.com' })).not.toBe(
       null
     );
@@ -25,8 +23,6 @@ describe('[E2E] Testing the registration route', () => {
       .post('/api/register')
       .send({ email: 'email@test.com', password: 'Password1!' });
     expect(res.statusCode).toBe(422);
-    expect(res.body.success).toBeDefined();
-    expect(res.body.success).toBe(false);
     expect(res.body.errors).toBeDefined();
     expect(res.body.errors).toStrictEqual([
       {
@@ -43,8 +39,6 @@ describe('[E2E] Testing the registration route', () => {
       .post('/api/register')
       .send({ email: 'emailtest.com', password: 'Password1!' });
     expect(res.statusCode).toBe(400);
-    expect(res.body.success).toBeDefined();
-    expect(res.body.success).toBe(false);
     expect(res.body.errors).toBeDefined();
     expect(res.body.errors).toStrictEqual([
       {
@@ -61,8 +55,6 @@ describe('[E2E] Testing the registration route', () => {
       .post('/api/register')
       .send({ email: '@test.com', password: 'Password1!' });
     expect(res.statusCode).toBe(400);
-    expect(res.body.success).toBeDefined();
-    expect(res.body.success).toBe(false);
     expect(res.body.errors).toBeDefined();
     expect(res.body.errors).toStrictEqual([
       {
@@ -79,8 +71,6 @@ describe('[E2E] Testing the registration route', () => {
       .post('/api/register')
       .send({ email: 'email@.com', password: 'Password1!' });
     expect(res.statusCode).toBe(400);
-    expect(res.body.success).toBeDefined();
-    expect(res.body.success).toBe(false);
     expect(res.body.errors).toBeDefined();
     expect(res.body.errors).toStrictEqual([
       {
@@ -97,8 +87,6 @@ describe('[E2E] Testing the registration route', () => {
       .post('/api/register')
       .send({ email: 'email@test', password: 'Password1!' });
     expect(res.statusCode).toBe(400);
-    expect(res.body.success).toBeDefined();
-    expect(res.body.success).toBe(false);
     expect(res.body.errors).toBeDefined();
     expect(res.body.errors).toStrictEqual([
       {
@@ -115,8 +103,6 @@ describe('[E2E] Testing the registration route', () => {
       .post('/api/register')
       .send({ email: '', password: 'Password1!' });
     expect(res.statusCode).toBe(400);
-    expect(res.body.success).toBeDefined();
-    expect(res.body.success).toBe(false);
     expect(res.body.errors).toBeDefined();
     expect(res.body.errors).toStrictEqual([
       {
@@ -133,8 +119,6 @@ describe('[E2E] Testing the registration route', () => {
       .post('/api/register')
       .send({ email: 'password@test.com', password: 'Passw1!' });
     expect(res.statusCode).toBe(400);
-    expect(res.body.success).toBeDefined();
-    expect(res.body.success).toBe(false);
     expect(res.body.errors).toBeDefined();
     expect(res.body.errors).toStrictEqual([
       {
@@ -151,8 +135,6 @@ describe('[E2E] Testing the registration route', () => {
       .post('/api/register')
       .send({ email: 'password@test.com', password: 'Password1' });
     expect(res.statusCode).toBe(400);
-    expect(res.body.success).toBeDefined();
-    expect(res.body.success).toBe(false);
     expect(res.body.errors).toBeDefined();
     expect(res.body.errors).toStrictEqual([
       {
@@ -169,8 +151,6 @@ describe('[E2E] Testing the registration route', () => {
       .post('/api/register')
       .send({ email: 'password@test.com', password: 'Password!' });
     expect(res.statusCode).toBe(400);
-    expect(res.body.success).toBeDefined();
-    expect(res.body.success).toBe(false);
     expect(res.body.errors).toBeDefined();
     expect(res.body.errors).toStrictEqual([
       {
@@ -187,8 +167,6 @@ describe('[E2E] Testing the registration route', () => {
       .post('/api/register')
       .send({ email: 'password@test.com', password: 'password1!' });
     expect(res.statusCode).toBe(400);
-    expect(res.body.success).toBeDefined();
-    expect(res.body.success).toBe(false);
     expect(res.body.errors).toBeDefined();
     expect(res.body.errors).toStrictEqual([
       {
@@ -205,8 +183,6 @@ describe('[E2E] Testing the registration route', () => {
       .post('/api/register')
       .send({ email: 'password@test.com', password: 'PASSWORD1!' });
     expect(res.statusCode).toBe(400);
-    expect(res.body.success).toBeDefined();
-    expect(res.body.success).toBe(false);
     expect(res.body.errors).toBeDefined();
     expect(res.body.errors).toStrictEqual([
       {
@@ -223,8 +199,6 @@ describe('[E2E] Testing the registration route', () => {
       .post('/api/register')
       .send({ email: 'password@test.com', password: 'Password1!' });
     expect(res.statusCode).toBe(201);
-    expect(res.body.success).toBeDefined();
-    expect(res.body.success).toBe(true);
   });
 
   afterAll(async () => {
