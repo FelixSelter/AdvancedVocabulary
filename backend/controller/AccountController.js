@@ -1,18 +1,11 @@
 import Account from '../models/AccountModel.js';
-import { validationResult } from 'express-validator';
 
 /**
  * A function to register an account
- * @param {String} req
- * @param {String} res
+ * @param {Object} req
+ * @param {Object} res
  */
 function register(req, res) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ success: false, errors: errors.array() });
-    return;
-  }
-
   const user = new Account({
     email: req.body.email,
   });
