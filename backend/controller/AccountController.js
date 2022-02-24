@@ -1,5 +1,4 @@
 import Account from '../models/AccountModel.js';
-import passport from 'passport';
 
 /**
  * A function to register an account
@@ -12,7 +11,6 @@ function register(req, res) {
   });
 
   Account.register(user, req.body.password, function (err, user) {
-    console.log(err);
     if (err) {
       res.status(422).json({
         errors: [
