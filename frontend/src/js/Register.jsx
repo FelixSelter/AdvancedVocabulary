@@ -27,16 +27,16 @@ export default function Login() {
   const [validated, setValidated] = useState(false);
 
   /**
-   * The email address inside the form
+   * An error message that gets displayed when set
    * @type {String}
    */
-  const [email, setEmail] = useState('');
+  const [statusInfo, setStatusInfo] = useState(null);
 
   /**
    * The email address inside the form
    * @type {String}
    */
-  const [usernameComment, setUsernameComment] = useState(null);
+  const [email, setEmail] = useState('');
 
   /**
    * The password inside the form
@@ -59,6 +59,7 @@ export default function Login() {
           process.env.REACT_APP_BACKEND + 'register',
           { email, password },
           {
+            withCredentials: true,
             headers: {
               'content-type': 'application/json',
             },
@@ -69,7 +70,7 @@ export default function Login() {
       } catch (error) {
         // The only error can be username taken
         // password and email validity is checked by the form so they are correct for sure
-        setUsernameComment(t('email_taken'));
+        setStatusInfo(t('email_taken'));
       }
     }
 
@@ -103,9 +104,7 @@ export default function Login() {
           <p>{t('email_specify')}</p>
         </Form.Control.Feedback>
         <Form.Text className="text-muted">{t('email_disclaimer')}</Form.Text>
-        {usernameComment !== null && (
-          <Alert variant="danger">{usernameComment}</Alert>
-        )}
+        {statusInfo !== null && <Alert variant="danger">{statusInfo}</Alert>}
       </div>
 
       <div className="mb-3">

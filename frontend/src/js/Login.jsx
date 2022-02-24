@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { Form, Button, Popover, OverlayTrigger } from 'react-bootstrap';
+import { Form, Button, Popover, OverlayTrigger, Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 /**
  * The login form
@@ -16,6 +18,17 @@ export default function Login(props) {
   const { t } = useTranslation();
 
   /**
+   * @type {function} Used to navigate to / after Register is complete
+   */
+  const redirect = useNavigate();
+
+  /**
+   * An error message that gets displayed when set
+   * @type {String}
+   */
+  const [statusInfo, setStatusInfo] = useState(null);
+
+  /**
    * If the guest info is active or not
    * @type {Boolean}
    */
@@ -27,6 +40,18 @@ export default function Login(props) {
    * @type {Boolean}
    */
   const [validated, setValidated] = useState(false);
+
+  /**
+   * The email address inside the form
+   * @type {String}
+   */
+  const [email, setEmail] = useState('');
+
+  /**
+   * The password inside the form
+   * @type {String}
+   */
+  const [password, setPassword] = useState('');
 
   /**
    * The popover that shows information about the guest login
@@ -52,13 +77,29 @@ export default function Login(props) {
    * Validates the form so custom visual feedback can be applied
    * @param {MouseEvent} event ClickEvent
    */
-  function handleSubmit(event) {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+  async function handleSubmit(event) {
+    event.preventDefault();
+    event.stopPropagation();
 
+    if (event.currentTarget.checkValidity()) {
+      try {
+        await axios.post(
+          process.env.REACT_APP_BACKEND + 'login',
+          { email, password },
+          {
+            withCredentials: true,
+            headers: {
+              'content-type': 'application/json',
+            },
+          }
+        );
+
+        redirect('/');
+      } catch (error) {
+        // Acount information is wrong
+        setStatusInfo(t('auth_failed'));
+      }
+    }
     // display the highlights
     setValidated(true);
   }
@@ -77,8 +118,10 @@ export default function Login(props) {
           type="email"
           placeholder={t('email_address')}
           size="lg"
+          onChange={(event) => setEmail(event.target.value)}
         />
         <Form.Text className="text-muted">{t('email_disclaimer')}</Form.Text>
+        {statusInfo !== null && <Alert variant="danger">{statusInfo}</Alert>}
       </div>
 
       <div className="mb-1">
@@ -88,6 +131,7 @@ export default function Login(props) {
           type="password"
           placeholder={t('password')}
           size="lg"
+          onChange={(event) => setPassword(event.target.value)}
         />
       </div>
 

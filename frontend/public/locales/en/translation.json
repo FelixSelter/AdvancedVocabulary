@@ -15,5 +15,6 @@
   "password_repeat": "Repear your password",
   "password_match": "Your passwords need to match",
   "account_create": "Create a new Account",
-  "email_taken": "Theres already an account registered with this email address"
+  "email_taken": "Theres already an account registered with this email address",
+  "auth_failed": "Username or password is incorrect"
 }

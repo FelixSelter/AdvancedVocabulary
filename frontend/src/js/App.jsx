@@ -1,7 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import Auth from './Auth';
+import Auth from './Auth.jsx';
+import Home from './Home.jsx';
+import RouteProtector from './RouteProtector.jsx';
 
 /**
  * The Root component of the application.
@@ -12,9 +14,28 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<p>home</p>} />
-        <Route path="/login" element={<Auth />} />
+        <Route
+          path="/"
+          element={
+            <RouteProtector
+              shouldBeAuthenticated={true}
+              redirectTo={'/login'}
+            />
+          }
+        >
+          <Route path="/" element={<Home />} />
+        </Route>
+
+        <Route
+          path="/"
+          element={
+            <RouteProtector shouldBeAuthenticated={false} redirectTo={'/'} />
+          }
+        >
+          <Route path="/login" element={<Auth />} />
+        </Route>
       </Routes>
+      )
     </BrowserRouter>
   );
 }
